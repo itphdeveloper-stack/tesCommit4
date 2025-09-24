@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>CSV Login — Demo</title>
+    <link rel="stylesheet" href="/styles/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <div class="card">
+        <h1>Welcome</h1>
+        <form id="loginForm">
+          <label>
+            Username
+            <input type="text" id="username" name="username" required />
+          </label>
+          <label>
+            Password
+            <input type="password" id="password" name="password" required />
+          </label>
+          <button type="submit">Log in</button>
+          <p id="message" class="muted"></p>
+        </form>
+      </div>
+    </main>
+
+    <script>
+      const form = document.getElementById("loginForm");
+      const message = document.getElementById("message");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        message.textContent = "Checking...";
+
+        const payload = {
+          username: document.getElementById("username").value.trim(),
+          password: document.getElementById("password").value,
+        };
+
+        try {
+          const res = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await res.json();
+          if (res.ok && data.success) {
+            message.style.color = "green";
+            message.textContent =
+              "Login successful — welcome, " + data.username + "!";
+            // Example: store token or set UI state
+            // localStorage.setItem('auth', JSON.stringify({username: data.username}));
+          } else {
+            message.style.color = "crimson";
+            message.textContent = data.error || "Login failed";
+          }
+        } catch (err) {
+          message.style.color = "crimson";
+          message.textContent = "Network error";
+          console.error(err);
+        }
+      });
+    </script>
+  </body>
+</html>
