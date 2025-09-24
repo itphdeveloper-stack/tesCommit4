@@ -1,37 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>CSV Login — Demo</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drive Portal | Secure File Access</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="/styles/styles.css" />
   </head>
   <body>
-    <main class="container">
-      <div class="card">
-        <h1>Welcome</h1>
-        <form id="loginForm">
-          <label>
-            Username
-            <input type="text" id="username" name="username" required />
-          </label>
-          <label>
-            Password
-            <input type="password" id="password" name="password" required />
-          </label>
-          <button type="submit">Log in</button>
-          <p id="message" class="muted"></p>
-        </form>
+    <div class="background-animation">
+      <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
       </div>
-    </main>
+    </div>
+
+    <div class="container">
+      <!-- Login Form -->
+      <div id="loginForm" class="fade-in">
+        <div class="logo">
+          <i class="fas fa-cloud"></i>
+        </div>
+        <h1>Drive Portal</h1>
+        <p class="subtitle">Secure access to your files</p>
+
+        <form id="formLogin">
+          <div class="form-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" placeholder="Username" required />
+          </div>
+
+          <div class="form-group">
+            <i class="fas fa-lock"></i>
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+            />
+          </div>
+
+          <button type="submit" class="btn" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+          </button>
+        </form>
+
+        <div id="loginError" class="error-message"></div>
+      </div>
+
+      <!-- Portal Content (placeholder after login) -->
+      <div id="portalContent" style="display: none" class="fade-in">
+        <div class="portal-header">
+          <div class="welcome-text">
+            <i class="fas fa-folder-open"></i> Welcome
+            <span id="welcomeUser"></span>
+          </div>
+          <button id="logoutBtn" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+
+        <div class="file-grid">
+          <div class="loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <div>Portal ready. (No files connected)</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script>
-      const form = document.getElementById("loginForm");
-      const message = document.getElementById("message");
+      const form = document.getElementById("formLogin");
+      const loginBtn = document.getElementById("loginBtn");
+      const errorDiv = document.getElementById("loginError");
 
       form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        message.textContent = "Checking...";
+        loginBtn.disabled = true;
+        loginBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+        errorDiv.style.display = "none";
 
         const payload = {
           username: document.getElementById("username").value.trim(),
@@ -46,21 +99,33 @@
           });
 
           const data = await res.json();
+
           if (res.ok && data.success) {
-            message.style.color = "green";
-            message.textContent =
-              "Login successful — welcome, " + data.username + "!";
-            // Example: store token or set UI state
-            // localStorage.setItem('auth', JSON.stringify({username: data.username}));
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("portalContent").style.display = "block";
+            document.getElementById("welcomeUser").textContent = data.username;
           } else {
-            message.style.color = "crimson";
-            message.textContent = data.error || "Login failed";
+            errorDiv.style.display = "block";
+            errorDiv.innerHTML =
+              '<i class="fas fa-exclamation-triangle"></i> ' +
+              (data.error || "Login failed");
           }
         } catch (err) {
-          message.style.color = "crimson";
-          message.textContent = "Network error";
-          console.error(err);
+          errorDiv.style.display = "block";
+          errorDiv.innerHTML =
+            '<i class="fas fa-exclamation-triangle"></i> Network error';
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
         }
+      });
+
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        document.getElementById("portalContent").style.display = "none";
+        document.getElementById("loginForm").style.display = "block";
+        document.getElementById("username").value = "";
+        document.getElementById("password").value = "";
+        errorDiv.style.display = "none";
       });
     </script>
   </body>
