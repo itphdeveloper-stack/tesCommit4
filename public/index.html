@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/styles/styles.css" />
   </head>
   <body>
+    <!-- Animated background -->
     <div class="background-animation">
       <div class="floating-shapes">
         <div class="shape"></div>
@@ -20,44 +21,43 @@
       </div>
     </div>
 
-    <div class="container">
-      <!-- Login Form -->
-      <div id="loginForm" class="fade-in">
-        <div class="logo">
-          <i class="fas fa-cloud"></i>
-        </div>
-        <h1>Drive Portal</h1>
-        <p class="subtitle">Secure access to your files</p>
-
-        <form id="formLogin">
-          <div class="form-group">
-            <i class="fas fa-user"></i>
-            <input type="text" id="username" placeholder="Username" required />
-          </div>
-
-          <div class="form-group">
-            <i class="fas fa-lock"></i>
-            <input
-              type="password"
-              id="password"
-              placeholder="Password"
-              required
-            />
-          </div>
-
-          <button type="submit" class="btn" id="loginBtn">
-            <i class="fas fa-sign-in-alt"></i> Sign In
-          </button>
-        </form>
-
-        <div id="loginError" class="error-message"></div>
+    <!-- Login Container -->
+    <div class="container fade-in">
+      <div class="logo">
+        <i class="fas fa-cloud"></i>
       </div>
+      <h1>Drive Portal</h1>
+      <p class="subtitle">Secure access to your files</p>
 
-      <!-- Portal Content (placeholder after login) -->
-      <div id="portalContent" style="display: none" class="fade-in">
+      <!-- Login form -->
+      <form id="loginForm">
+        <div class="form-group">
+          <i class="fas fa-user"></i>
+          <input type="text" id="username" placeholder="Username" required />
+        </div>
+
+        <div class="form-group">
+          <i class="fas fa-lock"></i>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <button type="submit" class="btn" id="loginBtn">
+          <i class="fas fa-sign-in-alt"></i> Sign In
+        </button>
+      </form>
+
+      <div id="loginError" class="error-message"></div>
+
+      <!-- Portal (shown after login) -->
+      <div id="portalContent" style="display: none">
         <div class="portal-header">
           <div class="welcome-text">
-            <i class="fas fa-folder-open"></i> Welcome
+            <i class="fas fa-folder-open"></i> Welcome,
             <span id="welcomeUser"></span>
           </div>
           <button id="logoutBtn" class="logout-btn">
@@ -74,8 +74,9 @@
       </div>
     </div>
 
+    <!-- Minimal JS to handle login -->
     <script>
-      const form = document.getElementById("formLogin");
+      const form = document.getElementById("loginForm");
       const loginBtn = document.getElementById("loginBtn");
       const errorDiv = document.getElementById("loginError");
 
